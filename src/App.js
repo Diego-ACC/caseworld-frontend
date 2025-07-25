@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
+import ProtectedRoute from './protectedRoute.jsx';
+import Catalogo from './pages/Catalogo.jsx';
+import AdminPanel from './adminPanel.jsx';
+import Login from './login.jsx';
+
+
+function RutaPrivada({ children }){
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  return isAdmin ? children : <Navigate to="/login"/>;
+}
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  return(
+    <Router>
+      <Routes>
+        <Route path="/" element={<Catalogo/>} />
+        <Route path="/admin" element={
+          <RutaPrivada>
+            <AdminPanel/>
+        </RutaPrivada>} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </Router>
   );
 }
 
